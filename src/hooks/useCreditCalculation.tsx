@@ -6,15 +6,18 @@ export const useCreditCalculation = () => {
   const [result, setResult] = useState<number[]>(Array.from({ length: 3 }));
   const [isValidResult, setIsValidResult] = useState(false);
 
-  const [sliderValue, setSliderValue] = useState(3);
-  const initialFieldValues = Array.from({ length: sliderValue }, () =>
-    Array(sliderValue).fill(0)
+  const [personCount, setPersonCount] = useState(3);
+  const initialFieldValues = Array.from({ length: personCount }, () =>
+    Array(personCount).fill(0)
   );
   const [fieldValues, setFieldValues] = useState(initialFieldValues);
 
+  const initialMemberValues = Array(personCount).fill('');
+  const [personValues, setPersonValues] = useState(initialMemberValues);
+
   useEffect(() => {
-    setFieldValues(Array.from({ length: sliderValue }, () => Array(sliderValue).fill(0)));
-  }, [sliderValue]);
+    setFieldValues(Array.from({ length: personCount }, () => Array(personCount).fill(0)));
+  }, [personCount]);
 
   const handleInputChange = (row: number, col: number, value: number) => {
     const newFieldValues = [...fieldValues];
@@ -22,10 +25,15 @@ export const useCreditCalculation = () => {
 
     setFieldValues(newFieldValues);
 
-    calculateAssignCredit({ personCount: sliderValue, contributions: newFieldValues });
+    calculateAssignCredit({ personCount: personCount, contributions: newFieldValues });
   }
 
-  const onChangeValue = (e: any) => setSliderValue(Number(e.target.value))
+  const onChangeMemberCountValue = (e: any) => setPersonCount(Number(e.target.value))
+  const onChangeMemberValue = ((index: number, value: string) => {
+    const newPersonValues = [...personValues];
+    newPersonValues[index] = value;
+    setPersonValues(newPersonValues);
+  });
 
   const calculateAssignCredit = (params: ICreditCalculationParams): void => {
     const { personCount, contributions } = params;
@@ -39,13 +47,22 @@ export const useCreditCalculation = () => {
     }
   };
 
+  const clearValues = () => {
+    setFieldValues(Array.from({ length: personCount }, () => Array(personCount).fill(0)));
+    calculateAssignCredit({ personCount: personCount, contributions: fieldValues });
+    setResult(Array.from({ length: 3 }));
+  };
+
   return {
     calculateAssignCredit,
     result,
     isValidResult,
     fieldValues,
     handleInputChange,
-    sliderValue,
-    onChangeValue
+    personCount,
+    onChangeMemberCountValue,
+    personValues,
+    onChangeMemberValue,
+    clearValues
   };
 }
