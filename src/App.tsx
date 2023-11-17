@@ -26,7 +26,6 @@ const App: FC = () => {
           <h5 className="card-title text-center">Envy Free</h5>
           <div className="mb-4">
             <label htmlFor="formControlRange">Please select amount of members: {personCount}</label>
-            <Divider />
             <input
               type="range"
               className="form-range"
@@ -37,7 +36,11 @@ const App: FC = () => {
               onChange={onChangeMemberCountValue}
             />
           </div>
+          <Divider />
+          <h4>Persons</h4>
           <MembersForm handleInputChange={onChangeMemberValue} persons={personValues} personCount={personCount} />
+          <Divider />
+          <h4>Participation's</h4>
           <CreditCalculationForm handleInputChange={handleInputChange} fieldValues={fieldValues} />
           <Divider />
           <Button type="primary" shape="round">Submit</Button>
